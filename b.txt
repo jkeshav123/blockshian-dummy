@@ -1,0 +1,22 @@
+blockshian-dummy/
+├── 📄 package.json
+├── 📄 README.md
+├── 📄 .gitignore
+├── 📁 contracts/
+│   ├── 📁 ethereum/
+│   │   └── 📄 BlockshianToken.sol
+│   ├── 📁 scripts/
+│   │   └── 📄 deploy.js
+│   ├── 📄 hardhat.config.js
+│   └── 📄 package.json
+├── 📁 frontend/
+│   ├── 📁 src/
+│   │   ├── 📄 App.js
+│   │   └── 📄 App.css
+│   ├── 📁 public/
+│   │   └── 📄 index.html
+│   └── 📄 package.json
+├── 📁 backend/
+│   ├── 📄 server.js
+│   └── 📄 package.json
+└── 📄 setup-instructions.md
