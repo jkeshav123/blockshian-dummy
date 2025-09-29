@@ -1,0 +1,5 @@
+blockshian-dummy/
+├── contracts/     # Smart contracts & deployment
+├── frontend/      # React dApp interface
+├── backend/       # Node.js API server
+└── docs/          # Documentation

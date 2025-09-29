@@ -1,0 +1,14 @@
+
+## **How to Use This:** 🎯
+
+1. **Create the folder structure** exactly as shown above
+2. **Copy each file's content** into the corresponding file
+3. **Drag the entire `blockshian-dummy` folder** into your Git repository
+4. **Follow the setup instructions**
+
+## **Git Commands to Push:**
+```bash
+cd blockshian-dummy
+git add .
+git commit -m "Initial commit: Complete Blockshian Dummy blockchain platform"
+git push

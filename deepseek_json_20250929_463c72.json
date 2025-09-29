@@ -1,0 +1,15 @@
+{
+  "name": "blockshian-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Blockshian Dummy",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

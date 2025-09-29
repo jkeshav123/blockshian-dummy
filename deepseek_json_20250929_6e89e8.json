@@ -1,0 +1,15 @@
+{
+  "name": "blockshian-dummy",
+  "version": "1.0.0",
+  "description": "A dummy blockchain platform for testing and learning",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev", 
+    "deploy:contracts": "cd contracts && npx hardhat run scripts/deploy.js --network localhost",
+    "test:contracts": "cd contracts && npx hardhat test",
+    "install:all": "npm install && cd contracts && npm install && cd ../frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": ["blockchain", "crypto", "web3", "ethereum", "dapp"],
+  "author": "Gopal Jindal",
+  "license": "MIT"
+}
