@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Local Blockchain Node
+  blockchain:
+    build: 
+      context: ./contracts
+      dockerfile: Dockerfile.blockchain
+    ports:
+      - "8545:8545"
+    networks:
+      - blockshian-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - BLOCKCHAIN_NETWORK=blockchain:8545
+    depends_on:
+      - blockchain
+    networks:
+      - blockshian-network
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:5000
+      - VITE_BLOCKCHAIN_RPC=http://localhost:8545
+    depends_on:
+      - backend
+    networks:
+      - blockshian-network
+
+  # Database (Optional)
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - blockshian-network
+
+  # Redis Cache (Optional)
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - blockshian-network
+
+volumes:
+  mongo_data:
+
+networks:
+  blockshian-network:
+    driver: bridge

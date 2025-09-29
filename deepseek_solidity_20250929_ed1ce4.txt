@@ -1,0 +1,169 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+
+/**
+ * @title BlockshianToken
+ * @dev ERC20 token with minting, burning, snapshot, and governance capabilities
+ * @author Gopal Jindal
+ * @notice This is a dummy token for the Blockshian platform for testing and learning purposes
+ */
+contract BlockshianToken is ERC20, ERC20Burnable, ERC20Snapshot, Ownable, Pausable, ERC20Permit, ERC20Votes {
+    uint8 private _decimals;
+    uint256 public maxSupply;
+    
+    // Mapping for blacklisted addresses
+    mapping(address => bool) public isBlacklisted;
+    
+    // Events
+    event TokensMinted(address indexed to, uint256 amount);
+    event TokensBurned(address indexed from, uint256 amount);
+    address Blacklisted(address indexed account);
+    address Whitelisted(address indexed account);
+    event MaxSupplyUpdated(uint256 oldMaxSupply, uint256 newMaxSupply);
+    
+    /**
+     * @dev Constructor that initializes the token
+     * @param name_ Name of the token
+     * @param symbol_ Symbol of the token
+     * @param decimals_ Number of decimals
+     * @param initialSupply_ Initial token supply
+     * @param maxSupply_ Maximum token supply
+     */
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_,
+        uint256 initialSupply_,
+        uint256 maxSupply_
+    ) ERC20(name_, symbol_) ERC20Permit(name_) {
+        require(initialSupply_ <= maxSupply_, "Initial supply exceeds max supply");
+        
+        _decimals = decimals_;
+        maxSupply = maxSupply_;
+        
+        _mint(msg.sender, initialSupply_ * 10 ** decimals_);
+        emit TokensMinted(msg.sender, initialSupply_ * 10 ** decimals_);
+    }
+    
+    /**
+     * @dev Returns the number of decimals used
+     */
+    function decimals() public view virtual override returns (uint8) {
+        return _decimals;
+    }
+    
+    /**
+     * @dev Creates a new token snapshot
+     */
+    function snapshot() public onlyOwner {
+        _snapshot();
+    }
+    
+    /**
+     * @dev Mints new tokens
+     * @param to Address to mint tokens to
+     * @param amount Amount of tokens to mint
+     */
+    function mint(address to, uint256 amount) public onlyOwner {
+        require(totalSupply() + amount <= maxSupply, "Exceeds max supply");
+        require(!isBlacklisted[to], "Recipient is blacklisted");
+        
+        _mint(to, amount);
+        emit TokensMinted(to, amount);
+    }
+    
+    /**
+     * @dev Pauses all token transfers
+     */
+    function pause() public onlyOwner {
+        _pause();
+    }
+    
+    /**
+     * @dev Unpauses all token transfers
+     */
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+    
+    /**
+     * @dev Blacklists an address
+     * @param account Address to blacklist
+     */
+    function blacklist(address account) public onlyOwner {
+        isBlacklisted[account] = true;
+        emit Blacklisted(account);
+    }
+    
+    /**
+     * @dev Removes an address from blacklist
+     * @param account Address to remove from blacklist
+     */
+    function removeFromBlacklist(address account) public onlyOwner {
+        isBlacklisted[account] = false;
+        emit Whitelisted(account);
+    }
+    
+    /**
+     * @dev Updates the maximum supply
+     * @param newMaxSupply New maximum supply
+     */
+    function updateMaxSupply(uint256 newMaxSupply) public onlyOwner {
+        require(newMaxSupply >= totalSupply(), "New max supply less than current supply");
+        emit MaxSupplyUpdated(maxSupply, newMaxSupply);
+        maxSupply = newMaxSupply;
+    }
+    
+    /**
+     * @dev Hook that is called before any transfer of tokens
+     */
+    function _beforeTokenTransfer(address from, address to, uint256 amount)
+        internal
+        whenNotPaused
+        override(ERC20, ERC20Snapshot)
+    {
+        require(!isBlacklisted[from], "Sender is blacklisted");
+        require(!isBlacklisted[to], "Recipient is blacklisted");
+        
+        super._beforeTokenTransfer(from, to, amount);
+    }
+    
+    /**
+     * @dev Hook that is called after any transfer of tokens
+     */
+    function _afterTokenTransfer(address from, address to, uint256 amount)
+        internal
+        override(ERC20, ERC20Votes)
+    {
+        super._afterTokenTransfer(from, to, amount);
+    }
+    
+    /**
+     * @dev Hook that is called after any minting of tokens
+     */
+    function _mint(address to, uint256 amount)
+        internal
+        override(ERC20, ERC20Votes)
+    {
+        super._mint(to, amount);
+    }
+    
+    /**
+     * @dev Hook that is called after any burning of tokens
+     */
+    function _burn(address account, uint256 amount)
+        internal
+        override(ERC20, ERC20Votes)
+    {
+        super._burn(account, amount);
+        emit TokensBurned(account, amount);
+    }
+}

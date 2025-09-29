@@ -1,0 +1,30 @@
+# Blockchain Network Configuration
+BLOCKCHAIN_NETWORK=localhost
+INFURA_API_KEY=your_infura_api_key_here
+ALCHEMY_API_KEY=your_alchemy_api_key_here
+
+# Contract Addresses (Update after deployment)
+TOKEN_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000000
+FACTORY_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000000
+
+# Wallet Configuration
+DEPLOYER_PRIVATE_KEY=your_private_key_here
+TEST_WALLET_PRIVATE_KEY=test_wallet_private_key_here
+
+# Backend Configuration
+PORT=5000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:5173
+
+# Database (Optional)
+DATABASE_URL=mongodb://localhost:27017/blockshian
+REDIS_URL=redis://localhost:6379
+
+# API Keys (Optional)
+ETHERSCAN_API_KEY=your_etherscan_api_key
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key
+
+# Frontend Configuration
+VITE_APP_NAME=Blockshian Dummy
+VITE_BACKEND_URL=http://localhost:5000
+VITE_BLOCKCHAIN_RPC=http://localhost:8545
